@@ -48,6 +48,7 @@ import Riders from "./pages/Restaurant/Riders";
 import GoogleMapPage from "./pages/GoogleMapPage";
 import Reviews from "./pages/Restaurant/Reviews";
 import ReviewDetail from "./pages/Restaurant/ReviewDetail";
+import VoiceOrder from "./pages/Restaurant/VoiceOrder";
 
 function App() {
   const { access_token } = useSelector(state => state.auth);
@@ -102,6 +103,7 @@ useEffect(()=>{
          <Route path="/dashboard" element={<PrivateRoute element={<Dashboard />} />} />
          <Route path="/rider/tracking/:orderId/:trackingToken/" element={<PrivateRoute element={<DeliveryLocationSender />} />} />
         <Route path="/customer/tracking/:orderId/:trackingToken/" element={<PrivateRoute element={<CustomerLocationViewer />} />} />
+        <Route path="/voice-order/" element={<PrivateRoute element={<VoiceOrder />} />} />
 
 
           {/* Vendor Protected Routes */}
@@ -121,8 +123,8 @@ useEffect(()=>{
           <Route path="/restaurant/reviews/:review_id" element={<RestaurantPrivateRoute element={<ReviewDetail />} />} />
           <Route path="/restaurant/riders" element={<RestaurantPrivateRoute element={<Riders />} />} />
           <Route path="/restaurant/add-riders" element={<RestaurantPrivateRoute element={<AddRider />} />} />
-          <Route path="/detail/:id" element={<RestaurantPrivateRoute element={<RestaurantDetail />} />} />
-          <Route path="/dishdetail/:slug" element={<RestaurantPrivateRoute element={<DishDetail />} />} />
+          <Route path="/detail/:id" element={<PrivateRoute element={<RestaurantDetail />} />} />
+          <Route path="/dishdetail/:slug" element={<PrivateRoute element={<DishDetail />} />} />
 
           <Route path="/customer/account/" element={<PrivateRoute element={<Account />} />} />
           <Route path="/customer/settings/" element={<PrivateRoute element={<Settings />} />} />

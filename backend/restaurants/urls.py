@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .views import DeliveryBoyDetailView, DeliveryBoyListCreateView, NearbyRestaurants,CouponStatAPIView,CouponListAPIView,CouponDetailAPIView, RestaurantReviewListAPIView,ReviewListAPIView,ReviewDetailAPIView,RestaurantCreateView,DashboardStatAPIView,RevenueAPIView,DishAPIView,OrderAPIView,OrderDetailAPIView,NotificationAPIView,NotificationseenAPIView,NotificationSummaryAPIView,NotificationRestaurantMarkAsSeenAPIView,RestaurantUpdateAPIView,RestaurantOwnerProfileUpdateAPIView,RestaurantAPIView,RestaurantDishAPIView,DishCreateAPIView,DishDeleteAPIView,DishUpdateAPIView,MonthlyEarningTracker,Earning
+from .views import DeliveryBoyDetailView, DeliveryBoyListCreateView, NearbyRestaurants,CouponStatAPIView,CouponListAPIView,CouponDetailAPIView, RestaurantReviewListAPIView,ReviewListAPIView,ReviewDetailAPIView,RestaurantCreateView,DashboardStatAPIView,RevenueAPIView,DishAPIView,OrderAPIView,OrderDetailAPIView,NotificationAPIView,NotificationseenAPIView,NotificationSummaryAPIView,NotificationRestaurantMarkAsSeenAPIView,RestaurantUpdateAPIView,RestaurantOwnerProfileUpdateAPIView,RestaurantAPIView,RestaurantDishAPIView,DishCreateAPIView,DishDeleteAPIView,DishUpdateAPIView,MonthlyEarningTracker,Earning,VoiceOrderView
 urlpatterns = [
 
     path('nearby-restaurants/', NearbyRestaurants.as_view(), name='nearby_restaurants'),
@@ -30,5 +30,6 @@ urlpatterns = [
     path('update-dish/<restaurant_id>/<dish_did>/', DishUpdateAPIView.as_view()),
     path('<int:restaurant_id>/delivery-boys/', DeliveryBoyListCreateView.as_view(), name='deliveryboy-list-create'),
     path('<int:restaurant_id>/delivery-boys/<int:pk>/', DeliveryBoyDetailView.as_view(), name='deliveryboy-detail'),
+    path('voice-order/', VoiceOrderView.as_view(), name='voice-order'),
 
 ]

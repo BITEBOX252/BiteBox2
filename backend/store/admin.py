@@ -16,7 +16,7 @@ class SpecificationAdmin(admin.TabularInline):
     model=Specification
 
 class DishAdmin(admin.ModelAdmin):
-    list_display=['title','price','in_stock','featured','featured','category','restaurant']
+    list_display=['id','title','price','in_stock','featured','featured','category','restaurant']
     list_editable=['featured']
     list_filter=['in_stock','featured']
     search_fields=['title']
