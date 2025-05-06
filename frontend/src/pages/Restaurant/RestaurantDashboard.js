@@ -94,31 +94,7 @@ function RestaurantDashboard() {
         </div>
         {/*/row*/}
         <hr />
-        <div className="container">
-          <div className="row my-3">
-            <div className="col">
-              <h4>Chart Analytics</h4>
-            </div>
-          </div>
-          <div className="row my-2">
-            <div className="col-md-12 py-1">
-              <div className="card">
-                <div className="card-body">
-                  <canvas id="line-chart" />
-                </div>
-              </div>
-            </div>
-            {/* <div class="col-md-6 py-1">
-                  <div class="card">
-                      <div class="card-body">
-                          <canvas id="pie-chart"></canvas>
-                      </div>
-                  </div>
-              </div> */}
-          </div>
-        </div>
-        <a id="layouts" />
-        <hr />
+        
         <div className="row mb-3 container">
           <div className="col-lg-12" style={{ marginBottom: 100 }}>
             {/* Nav tabs */}
@@ -140,7 +116,7 @@ function RestaurantDashboard() {
                   role="tab"
                   data-toggle="tab"
                 >
-                  Orders
+                  
                 </a>
               </li>
             </ul>

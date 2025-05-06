@@ -107,11 +107,7 @@ const Navbar = () => {
                       <i className="fas fa-shopping-cart"></i> Orders
                     </Link>
                   </li>
-                  <li>
-                    <Link className="dropdown-item" to={`/customer/wishlist/`}>
-                      <i className="fas fa-heart"></i> Wishlist
-                    </Link>
-                  </li>
+                  
                   <li>
                     <Link
                       className="dropdown-item"
@@ -179,12 +175,12 @@ const Navbar = () => {
                       <i className="fas fa-star"></i> Reviews
                     </Link>
                   </li>
-                  <li>
+                  {/* <li>
                     <Link className="dropdown-item" to="/vendor/coupon/">
                       {" "}
                       <i className="fas fa-tag"></i> Coupon
                     </Link>
-                  </li>
+                  </li> */}
                   <li>
                     <Link className="dropdown-item" to="/vendor/notifications/">
                       {" "}

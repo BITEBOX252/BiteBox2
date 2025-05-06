@@ -109,43 +109,7 @@ function Notifications() {
                 {" "}
                 <i className="fas fa-bell" /> Notifications
               </h4>
-              <div className="dropdown">
-                <button
-                  className="btn btn-secondary dropdown-toggle btn-sm mt-3 mb-4"
-                  type="button"
-                  id="dropdownMenuButton1"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  Filter <i className="fas fa-sliders" />
-                </button>
-                <ul
-                  className="dropdown-menu"
-                  aria-labelledby="dropdownMenuButton1"
-                >
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      Date: Latest
-                    </a>
-                  </li>
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      Date: Oldest
-                    </a>
-                  </li>
-                  <hr />
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      Status: Read
-                    </a>
-                  </li>
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      Status: UnRead
-                    </a>
-                  </li>
-                </ul>
-              </div>
+              
               <table className="table">
                 <thead className="table-dark">
                   <tr>

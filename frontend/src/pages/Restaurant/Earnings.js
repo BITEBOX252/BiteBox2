@@ -125,22 +125,7 @@ function Earnings() {
                 </tbody>
               </table>
             </div>
-            <div className="container">
-              <div className="row ">
-                <div className="col">
-                  <h4 className="mt-4">Revenue Analytics</h4>
-                </div>
-              </div>
-              <div className="row my-2">
-                <div className="col-md-12 py-1">
-                  <div className="card">
-                    <div className="card-body">
-                      <canvas id="line-chart" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            
           </div>
         </div>
       </div>

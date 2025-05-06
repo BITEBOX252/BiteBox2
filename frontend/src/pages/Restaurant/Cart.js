@@ -447,13 +447,13 @@ const createCartOrder = async () => {
                     Confirm Order
                   </button>
                 </section>
-                <section className="shadow rounded-3 card p-4 rounded-5">
+                {/* <section className="shadow rounded-3 card p-4 rounded-5">
                               <h5 className="mb-4">Apply Coupon Code</h5>
                               <div className="d-flex align-items-center">
                                 <input type="text" className="form-control rounded me-1" placeholder="Coupon Code" />
                                 <button type="button" className="btn btn-success btn-rounded overflow-visible" >Apply</button>
                               </div>
-                </section>
+                </section> */}
                 
               </div>
             </div>

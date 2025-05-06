@@ -78,15 +78,7 @@ function Dish() {
           <i className="bi bi-grid" /> All Dishes
         </h4>
         <div className="dropdown">
-          <button
-            className="btn btn-secondary dropdown-toggle btn-sm mt-3 mb-4"
-            type="button"
-            id="dropdownMenuButton1"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
-            Filter <i className="fas fa-sliders" />
-          </button>
+          
           <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
             <li>
               <a className="dropdown-item" href="#">
