@@ -1254,7 +1254,8 @@ class VoiceOrderView(APIView):
         }
 
         for word, number in numbers_map.items():
-            if f"{word} {dish_name}" in text:
+            # if f"{word} {dish_name}" in text:
+            if f"{number} quantity" in text or f"{number} quantities" in text:
                 return number
 
         digit_match = re.search(r'(\d+)\s+' + re.escape(dish_name), text)

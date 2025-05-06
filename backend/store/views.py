@@ -405,3 +405,92 @@ def clear_cart(request, cart_id, user_id=None):
     else:
         Cart.objects.filter(cart_id=cart_id, user=None).delete()
     return Response({"message": "Cart cleared."}, status=204)
+
+
+
+class CartAPIViewVoiceOrder(generics.ListCreateAPIView):
+    queryset=Cart.objects.all()
+    serializer_class=CartSerializer
+    permission_classes=[AllowAny]
+    def create(self,request,*args, **kwargs):
+        portion_size_obj=PortionSize()
+
+        payload=request.data
+        dish_id=payload['dish_id']
+        user_id=payload['user_id']
+        qty=payload['qty']
+        print()
+        price=payload['price']
+        print(type(price))
+        
+        # shipping_amount=payload['shipping_amount']
+        country=payload['country']
+        if country == "undefined":
+            country ="Pakistan"
+        portion_size=payload['portionSize']
+        print("size=============="+portion_size)
+        if portion_size!="No portion size":
+            portion_size_price=portion_size_obj.get_price_by_portion(portion_size)
+            print(portion_size_price)
+            print("size==============",portion_size_price)
+            price= Decimal(price)+portion_size_price
+            print(price)
+            print(type(portion_size_price))
+        spice_level=payload['spiceLevel']
+        cart_id=payload['cart_id']
+        
+        dish=Dish.objects.get(id=dish_id)
+        if user_id != "undefined":
+            user=User.objects.get(id=user_id)
+        else:
+            user=None
+        tax=Tax.objects.filter(country=country).first()
+        if tax:
+            tax_rate=tax.rate / 100
+        else:
+            tax_rate=0
+        # cart=Cart.objects.filter(cart_id=cart_id,dish=dish ).first()
+        cart=Cart.objects.filter(cart_id=cart_id,dish=dish,portion_size=portion_size,spice_level=spice_level).first()
+#         cart=Cart.objects.filter(cart_id=cart_id,dish=dish,portion_size=portion_size,           # Added size
+#  spice_level=spice_level ).first()
+        if cart:
+            cart.dish=dish
+            cart.user=user
+            cart.qty=qty
+            cart.price=price 
+            cart.sub_total=Decimal(price)
+            # cart.shipping_amount=Decimal(shipping_amount)*int(qty)
+            cart.tax_fee=int(qty) * Decimal(tax_rate)
+            cart.spice_level=spice_level
+            cart.portion_size=portion_size
+            cart.country=country
+            cart.cart_id=cart_id
+
+            service_fee=2 / 100
+            cart.service_fee=Decimal(service_fee)*cart.sub_total
+            
+            cart.total=cart.sub_total+cart.service_fee+cart.tax_fee
+            cart.save()
+            
+            return Response({"message":"Cart Updated Successfully!"},status=status.HTTP_200_OK)
+        else:
+            cart=Cart()
+            cart.dish=dish
+            cart.user=user
+            cart.qty=qty
+            cart.price=price
+            cart.sub_total=Decimal(price)
+            # cart.shipping_amount=Decimal(shipping_amount)*int(qty)
+            cart.tax_fee=int(qty) * Decimal(tax_rate)
+            cart.spice_level=spice_level
+            cart.portion_size=portion_size
+            cart.country=country
+            cart.cart_id=cart_id
+
+            service_fee=2 / 100
+            cart.service_fee=Decimal(service_fee) * cart.sub_total
+            
+            cart.total=cart.sub_total+cart.service_fee+cart.tax_fee
+            cart.save()
+        
+            return Response({"message":"Cart Created Successfully!"},status=status.HTTP_201_CREATED)

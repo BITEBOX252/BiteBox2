@@ -17,3 +17,5 @@ setuptools
 daphne
 channels
 channels-redis
+spacy
+rapidfuzz

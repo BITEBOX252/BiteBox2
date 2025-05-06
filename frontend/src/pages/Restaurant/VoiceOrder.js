@@ -868,7 +868,7 @@ const VoiceOrder = () => {
         formdata.append("spiceLevel", item.spice_level ?? 'No spice level');
         formdata.append("cart_id", CartId);
 
-        await axios.post('http://127.0.0.1:8000/api/store/cart/', formdata);
+        await axios.post('http://127.0.0.1:8000/api/store/cart-voice-order/', formdata);
       }
 
       Toast.fire({ icon: "success", title: "All items added to cart" });
