@@ -118,10 +118,11 @@ const Registration = () => {
         }
         if (res.data) {
           storeToken(res.data.token);
-          Toast.fire({
+          Swal.fire({
             icon: 'success',
-            title: 'Registered successfully'
+            title: 'Registered successfully,verify account by opening link in your gmail then login'
         });
+        
           navigate('/dashboard');
         }
       },
