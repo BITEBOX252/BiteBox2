@@ -8,6 +8,8 @@ from decimal import Decimal
 from rest_framework.response import Response
 from rest_framework import status
 from math import radians, sin, cos, sqrt, atan2
+from rest_framework.decorators import api_view
+
 # Create your views here.
 
 def send_notification(user=None, restaurant=None, order=None, order_item=None):
@@ -329,6 +331,7 @@ class createOrderAPIView(generics.CreateAPIView):
         order.total=total_total
 
         order.save()
+        cart_items.delete()
         return Response({"Message:":"Order created successfully","Order_Id":order.oid},status=status.HTTP_201_CREATED)
     
         
@@ -394,3 +397,11 @@ class SearchDishAPIView(generics.ListAPIView):
             restaurant__id__in=nearby_restaurant_ids
         )
         
+
+@api_view(['DELETE'])
+def clear_cart(request, cart_id, user_id=None):
+    if user_id:
+        Cart.objects.filter(cart_id=cart_id, user_id=user_id).delete()
+    else:
+        Cart.objects.filter(cart_id=cart_id, user=None).delete()
+    return Response({"message": "Cart cleared."}, status=204)

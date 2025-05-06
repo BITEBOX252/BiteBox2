@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import CategoryListAPIView,DishListAPIView,DishDetailAPIView,CartAPIView,CartLisAPItView,CartDetailAPIView,CartDeleteAPIView,createOrderAPIView,checkoutAPIView,SearchDishAPIView
+from .views import CategoryListAPIView,DishListAPIView,DishDetailAPIView,CartAPIView,CartLisAPItView,CartDetailAPIView,CartDeleteAPIView,createOrderAPIView,checkoutAPIView,SearchDishAPIView,clear_cart
 urlpatterns = [
     path('categories/',CategoryListAPIView.as_view()),
     path('dishes/',DishListAPIView.as_view()),
@@ -15,4 +15,7 @@ urlpatterns = [
     path('create-order/',createOrderAPIView.as_view()),
     path('checkout/<order_oid>/',checkoutAPIView.as_view()),
     path('search/',SearchDishAPIView.as_view()),
+    path('cart-clear/<str:cart_id>/', clear_cart),
+    path('cart-clear/<str:cart_id>/<int:user_id>/', clear_cart),
+
 ]

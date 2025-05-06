@@ -211,11 +211,11 @@ const createCartOrder = async () => {
     });
 
     // ✅ CLEAR CART after order confirmation
-    const clearUrl = data?.id 
-      ? `http://127.0.0.1:8000/api/store/cart-clear/${CartId}/${data.id}/` 
-      : `http://127.0.0.1:8000/api/store/cart-clear/${CartId}/`;
+    // const clearUrl = data?.id 
+    //   ? `http://127.0.0.1:8000/api/store/cart-clear/${CartId}/${data.id}/` 
+    //   : `http://127.0.0.1:8000/api/store/cart-clear/${CartId}/`;
 
-    await axios.delete(clearUrl);
+    // await axios.delete(clearUrl);
     
     // ✅ Refresh cart state
     fetchCartData(CartId, data?.id);
