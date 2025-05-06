@@ -956,14 +956,13 @@ const VoiceOrder = () => {
       const finalData = new FormData();
       finalData.append("cart_id", CartId);
       finalData.append("user_id", userData?.id);
-      finalData.append("name", userAddress.name);
-      finalData.append("phone", userAddress.phone);
+      finalData.append("full_name", userAddress.name);
+      finalData.append("mobile", userAddress.phone);
       finalData.append("address", userAddress.address);
       finalData.append("city", userAddress.city);
-      finalData.append("latitude", location.latitude);
-      finalData.append("longitude", location.longitude);
+     
 
-      await axios.post("http://127.0.0.1:8000/api/restaurant/place-order/", finalData);
+      await axios.post("http://127.0.0.1:8000/api/store/create-order/", finalData);
 
       setOrderConfirmed(true);
       setStage('done');
