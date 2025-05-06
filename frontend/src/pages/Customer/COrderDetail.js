@@ -240,6 +240,8 @@ const [order, setOrder] = useState([])
                         
                       </tbody>
                     </table>
+                    <p>Restaurant Name: {order?.restaurant?.[0].name}</p>
+                    <p>Restaurant Mobile: {order?.restaurant?.[0].phone_number}</p>
                   </div>
                 </div>
               </section>

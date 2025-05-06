@@ -144,44 +144,89 @@ const handleChange = (e) => {
           break;
   }
 };
-const createCartOrder = async () => {
+// const createCartOrder = async () => {
 
-        if (!fullName ||  !mobile || !address || !city ) {
-            // If any required field is missing, show an error message or take appropriate action
-            console.log("Please fill in all required fields");
-            Swal.fire({
-                icon: 'warning',
-                title: 'Missing Fields!',
-                text: "All fields are required before creating order",
-            })
-            return;
-        }
+//         if (!fullName ||  !mobile || !address || !city ) {
+//             // If any required field is missing, show an error message or take appropriate action
+//             console.log("Please fill in all required fields");
+//             Swal.fire({
+//                 icon: 'warning',
+//                 title: 'Missing Fields!',
+//                 text: "All fields are required before creating order",
+//             })
+//             return;
+//         }
 
-        try {
+//         try {
 
-            const formData = new FormData();
-            formData.append('full_name', fullName);
-            formData.append('mobile', mobile);
-            formData.append('address', address);
-            formData.append('city', city);
-            // formData.append('state', state);
-            // formData.append('country', country);
-            formData.append('cart_id', CartId);
-            formData.append('user_id', data? data.id : 0);
+//             const formData = new FormData();
+//             formData.append('full_name', fullName);
+//             formData.append('mobile', mobile);
+//             formData.append('address', address);
+//             formData.append('city', city);
+//             // formData.append('state', state);
+//             // formData.append('country', country);
+//             formData.append('cart_id', CartId);
+//             formData.append('user_id', data? data.id : 0);
 
-            const response = await axios.post('http://127.0.0.1:8000/api/store/create-order/', formData)
-            console.log(response.data);
+//             const response = await axios.post('http://127.0.0.1:8000/api/store/create-order/', formData)
+//             console.log(response.data);
            
-            Swal.fire({
-              icon: 'success',
-              title: 'Order Cofirmed!',
-          })
-            // navigate(`/checkout/${response.data.Order_Id}`);
+//             Swal.fire({
+//               icon: 'success',
+//               title: 'Order Cofirmed!',
+//           })
+//             // navigate(`/checkout/${response.data.Order_Id}`);
+            
+//             
+//         } catch (error) {
+//             console.log(error);
+//         }
+//     }
+const createCartOrder = async () => {
+  if (!fullName || !mobile || !address || !city) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Missing Fields!',
+      text: "All fields are required before creating order",
+    });
+    return;
+  }
 
-        } catch (error) {
-            console.log(error);
-        }
-    }
+  try {
+    const formData = new FormData();
+    formData.append('full_name', fullName);
+    formData.append('mobile', mobile);
+    formData.append('address', address);
+    formData.append('city', city);
+    formData.append('cart_id', CartId);
+    formData.append('user_id', data ? data.id : 0);
+
+    const response = await axios.post('http://127.0.0.1:8000/api/store/create-order/', formData);
+    console.log(response.data);
+
+    Swal.fire({
+      icon: 'success',
+      title: 'Order Confirmed!',
+    });
+
+    // ✅ CLEAR CART after order confirmation
+    const clearUrl = data?.id 
+      ? `http://127.0.0.1:8000/api/store/cart-clear/${CartId}/${data.id}/` 
+      : `http://127.0.0.1:8000/api/store/cart-clear/${CartId}/`;
+
+    await axios.delete(clearUrl);
+    
+    // ✅ Refresh cart state
+    fetchCartData(CartId, data?.id);
+    fetchCartTotalData(CartId, data?.id);
+    setCartCount(0);  // Update cart count in context
+
+  } catch (error) {
+    console.log(error);
+  }
+};
+
   return (<div>
     <div>
   <main className="mt-5">

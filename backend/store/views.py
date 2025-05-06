@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Dish,Category,Cart,Tax,PortionSize,CartOrder,CartOrderItem,Notification
+from .models import Dish,Category,Cart,Tax,PortionSize,CartOrder,CartOrderItem,Notification,Restaurant
 from account.models import User
 from .serializers import DishSerializer,CategorySerializer,CartSerializer,CartOrderSerializer
 from rest_framework import generics 
@@ -7,6 +7,7 @@ from rest_framework.permissions import AllowAny,IsAuthenticated
 from decimal import Decimal
 from rest_framework.response import Response
 from rest_framework import status
+from math import radians, sin, cos, sqrt, atan2
 # Create your views here.
 
 def send_notification(user=None, restaurant=None, order=None, order_item=None):
@@ -121,7 +122,8 @@ class CartAPIView(generics.ListCreateAPIView):
             tax_rate=tax.rate / 100
         else:
             tax_rate=0
-        cart=Cart.objects.filter(cart_id=cart_id,dish=dish ).first()
+        # cart=Cart.objects.filter(cart_id=cart_id,dish=dish ).first()
+        cart=Cart.objects.filter(cart_id=cart_id,dish=dish,portion_size=portion_size,spice_level=spice_level).first()
 #         cart=Cart.objects.filter(cart_id=cart_id,dish=dish,portion_size=portion_size,           # Added size
 #  spice_level=spice_level ).first()
         if cart:
@@ -342,15 +344,53 @@ class checkoutAPIView(generics.RetrieveAPIView):
         print(order)
         return order   
 
-class SearchDishAPIView(generics.ListCreateAPIView):
-    serializer_class=DishSerializer
-    permission_classes=[AllowAny]
+# class SearchDishAPIView(generics.ListCreateAPIView):
+#     serializer_class=DishSerializer
+#     permission_classes=[AllowAny]
+
+#     def get_queryset(self):
+#         query=self.request.GET.get("query")
+#         print(query)
+#         dishes=Dish.objects.filter(status="published",title__icontains=query) 
+#         print(dishes)  
+#         return dishes   
+
+#   
+
+class SearchDishAPIView(generics.ListAPIView):
+    serializer_class = DishSerializer
+    permission_classes = [AllowAny]
+
+    def haversine_distance(self, lat1, lon1, lat2, lon2):
+        R = 6371.0
+        lat1, lon1, lat2, lon2 = map(radians, [lat1, lon1, lat2, lon2])
+        dlat = lat2 - lat1
+        dlon = lon2 - lon1
+        a = sin(dlat / 2)**2 + cos(lat1) * cos(lat2) * sin(dlon / 2)**2
+        c = 2 * atan2(sqrt(a), sqrt(1 - a))
+        return R * c
 
     def get_queryset(self):
-        query=self.request.GET.get("query")
-        print(query)
-        dishes=Dish.objects.filter(status="published",title__icontains=query) 
-        print(dishes)  
-        return dishes              
+        query = self.request.GET.get("query", "")
+        user = self.request.user
 
+        if not user.is_authenticated:
+            return Dish.objects.none()  # Or fallback to all published dishes with the query
+
+        user_latitude = user.latitude
+        user_longitude = user.longitude
+        radius_km = 5
+
+        nearby_restaurant_ids = []
+
+        for restaurant in Restaurant.objects.all():
+            distance = self.haversine_distance(user_latitude, user_longitude, restaurant.latitude, restaurant.longitude)
+            if distance <= radius_km:
+                nearby_restaurant_ids.append(restaurant.id)
+
+        return Dish.objects.filter(
+            status="published",
+            title__icontains=query,
+            restaurant__id__in=nearby_restaurant_ids
+        )
         

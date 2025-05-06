@@ -61,14 +61,16 @@ const [cartCount,setCartCount]=useState()
 
 useEffect(()=>{
   console.log(data);
-  
-  const url = data ? `http://127.0.0.1:8000/api/store/cart-list/${CartId}/${data.id}/` : `http://127.0.0.1:8000/api/store/cart-list/${CartId}/`;
-    axios.get(url)
-      .then((res) => {
-        console.log(res);
-        setCartCount(res?.data.length);
-      })
-      .catch((error) => console.error("Error fetching cart data:", error));
+  if(data){
+
+    const url =  `http://127.0.0.1:8000/api/store/cart-list/${CartId}/${data.id}/`
+      axios.get(url)
+        .then((res) => {
+          console.log(res);
+          setCartCount(res?.data.length);
+        })
+        .catch((error) => console.error("Error fetching cart data:", error));
+  }
       
 })
   

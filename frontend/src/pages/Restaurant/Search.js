@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link,useSearchParams } from 'react-router-dom';
 import axios from 'axios';
+import { getToken } from '../../services/LocalStorageService';
 
 function Search() {
   const [dishes, setDishes] = useState([]);  // State for storing dishes
@@ -10,17 +11,34 @@ function Search() {
   const [param]=useSearchParams()
   const query=param.get('query')
 
-  const fetchDishes= async()=>{
-    axios.get(`http://127.0.0.1:8000/api/store/search?query=${query}`).
-    then(response => {
-      setDishes(response.data);  // Set the fetched dishes
-      console.log(response.data);
+  // const fetchDishes= async()=>{
+  //   axios.get(`http://127.0.0.1:8000/api/store/search?query=${query}`).
+  //   then(response => {
+  //     setDishes(response.data);  // Set the fetched dishes
+  //     console.log(response.data);
       
+  //   })
+  //   .catch(error => {
+  //     console.error("Error fetching dishes:", error);
+  //   });
+  // }
+  const { access_token } = getToken();
+
+  const fetchDishes = async () => {
+    
+    axios.get(`http://127.0.0.1:8000/api/store/search?query=${query}`, {
+      headers: {
+        Authorization: `Bearer ${access_token}`
+      }
+    })
+    .then(response => {
+      setDishes(response.data);
     })
     .catch(error => {
       console.error("Error fetching dishes:", error);
     });
   }
+  
   useEffect(() => {
     // Fetch dishes for the restaurant
     fetchDishes()
