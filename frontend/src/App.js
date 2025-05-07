@@ -49,6 +49,7 @@ import GoogleMapPage from "./pages/GoogleMapPage";
 import Reviews from "./pages/Restaurant/Reviews";
 import ReviewDetail from "./pages/Restaurant/ReviewDetail";
 import VoiceOrder from "./pages/Restaurant/VoiceOrder";
+import WeatherFoodSuggestions from "./pages/Restaurant/WeatherFoodSuggestions";
 
 function App() {
   const { access_token } = useSelector(state => state.auth);
@@ -133,6 +134,7 @@ useEffect(()=>{
           <Route path="/customer/orders/" element={<PrivateRoute element={<COrders />} />} />
           <Route path="/customer/notifications/" element={<PrivateRoute element={<CNotifications />} />} />
           <Route path="/customer/orders/:order_oid/" element={<PrivateRoute element={<COrderDetail />} />} />
+          <Route path="/weather-based-dishes" element={<PrivateRoute element={<WeatherFoodSuggestions />} />} />
 
 
 

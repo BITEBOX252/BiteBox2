@@ -32,19 +32,34 @@ class SpiceLevelSerializer(serializers.ModelSerializer):
         model=SpiceLevel
         fields="__all__"
 
+class ReviewSerializer(serializers.ModelSerializer):
+    profile=ProfileSerializer()
+    class Meta:
+        model=Review
+        fields=['id','user','dish','review','rating','profile','date','reply']
+
+    def __init__(self,*args, **kwargs):
+        # super(ReviewSerializer,self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
+        request=self.context.get("request")
+        if request and request.method == "POST":
+            self.Meta.depth=0
+        else:
+            self.Meta.depth=3
 
 class DishSerializer(serializers.ModelSerializer):
     gallery=GallerySerializer(many=True,read_only=True)
     spice_level=SpiceLevelSerializer(many=True,read_only=True)
     specification=SpecificationSerializer(many=True,read_only=True)
     portion_size=PortionSizeSerializer(many=True,read_only=True)
+    reviews=ReviewSerializer(many=True,read_only=True)
 
     #For telling react that these are the inline in the django,these are the same names which are in the model methods of product
     class Meta:
         model=Dish
         fields=['id','title','image','description','category','price','old_price','orders','stock_qty','in_stock','status','featured','views',
                 # 'rating',
-                'restaurant','gallery','specification','spice_level','portion_size','did','slug','date','dish_rating','rating_count']
+                'restaurant','gallery','specification','spice_level','portion_size','did','slug','date','dish_rating','reviews','rating_count']
     def __init__(self,*args, **kwargs):
         super(DishSerializer,self).__init__(*args, **kwargs)
         request=self.context.get("request")

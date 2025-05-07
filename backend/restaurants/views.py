@@ -16,7 +16,7 @@ from rest_framework.authentication import TokenAuthentication
 from django.db import models
 from account.serializers import ProfileSerializer
 from django.db import transaction
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view,permission_classes
 from django.db.models.functions import ExtractMonth
 from datetime import datetime, timedelta
 from django.db.models import F, Sum, ExpressionWrapper, DecimalField,Q
@@ -1298,3 +1298,118 @@ class VoiceOrderView(APIView):
         a = sin(dlat / 2) ** 2 + cos(lat1) * cos(lat2) * sin(dlon / 2) ** 2
         c = 2 * atan2(sqrt(a), sqrt(1 - a))
         return R * c
+
+
+@api_view(["POST"])
+@permission_classes([AllowAny])
+def weather_based_nearby_dishes(request):
+    user = request.user
+    temperature = request.data.get("temperature")
+    condition = request.data.get("condition", "").lower()
+
+    if not user.is_authenticated:
+        return Response({"error": "Authentication required"}, status=401)
+
+    if temperature is None or condition == "":
+        return Response({"error": "Temperature and condition are required."}, status=400)
+
+    try:
+        temperature = float(temperature)
+    except ValueError:
+        return Response({"error": "Invalid temperature format."}, status=400)
+
+    user_lat = user.latitude
+    user_lon = user.longitude
+
+    # Step 1: Weather-to-Category Mapping
+    weather_category_map = {
+    "cold": [
+        "Handi", "Karahi", "Qorma", "Soup", "Tea & Snacks",
+         "Steaks & Grills", "Barbecue", "Biryani / Pulao", 
+        "Fast Food", "Dessert", "Cakes & Pastries", "Chocolate Items",
+        "Seafood",
+    ],
+    "hot": [
+        "Ice Cream", "Beverages", "Falooda / Kulfi / Rabri",
+        "Salads", "Continental", "Handi", "Karahi", "Qorma","Fast Food", "Barbecue", "Biryani / Pulao",
+    ],
+    "moderate": [
+        "Barbecue", "Seafood", "Desi", "Daal", "Mexican (Tacos, Burritos)",
+        "Japanese / Sushi", "Chocolate Items", "Dessert", "Cakes & Pastries",
+        "Soup", "Tea & Snacks", "Qorma", "Nihari", "Haleem", 
+        "Biryani / Pulao", "Fast Food", "Asian Fusion", "Sabzi", "Chinese",
+    ],
+    "rain": [
+        "Soup", "Tea & Snacks", "Barbecue", "Biryani / Pulao", 
+        "Fast Food", "Dessert", "Cakes & Pastries", "Steaks & Grills",
+        "Handi", "Karahi", "Qorma"
+    ],
+    "snow": [
+        "Beverages", "Chocolate Items", "Soup", "Tea & Snacks",
+        "Steaks & Grills", "Handi", "Karahi", "Qorma"
+    ],
+    "clear": [
+        "Barbecue", "Seafood", "Desi", "Daal", "Mexican (Tacos, Burritos)",
+        "Japanese / Sushi", "Chocolate Items", "Dessert", "Cakes & Pastries",
+        "Soup", "Tea & Snacks", "Qorma", "Nihari", "Haleem",
+        "Biryani / Pulao", "Fast Food", "Asian Fusion", "Ice Cream",
+        "Snacks / Street Food", "Continental"
+    ],
+    "clouds": [
+        "Snacks / Street Food", "Karahi", "Barbecue", "Biryani / Pulao",
+        "Fast Food", "Dessert", "Cakes & Pastries", "Steaks & Grills",
+        "Tea & Snacks", "Handi", "Qorma",
+    ]
+}
+
+    # Determine weather context
+    selected_categories = []
+
+    if temperature < 15:
+        selected_categories += weather_category_map["cold"]
+    elif temperature > 30:
+        selected_categories += weather_category_map["hot"]
+    else:
+        selected_categories += weather_category_map["moderate"]
+
+    if "rain" in condition:
+        selected_categories += weather_category_map["rain"]
+    if "snow" in condition:
+        selected_categories += weather_category_map["snow"]
+    if "clear" in condition or "sunny" in condition:
+        selected_categories += weather_category_map["clear"]
+    if "clouds" in condition:
+        selected_categories += weather_category_map["clouds"]
+
+    selected_categories = list(set(selected_categories))  # remove duplicates
+
+    # Step 2: Filter restaurants within 5 km
+    radius_km = 5
+    nearby_restaurant_ids = []
+
+    def haversine(lat1, lon1, lat2, lon2):
+        R = 6371.0  # Earth radius in km
+        lat1, lon1, lat2, lon2 = map(radians, [lat1, lon1, lat2, lon2])
+        dlat = lat2 - lat1
+        dlon = lon2 - lon1
+        a = sin(dlat / 2) ** 2 + cos(lat1) * cos(lat2) * sin(dlon / 2) ** 2
+        c = 2 * atan2(sqrt(a), sqrt(1 - a))
+        return R * c
+
+    for restaurant in Restaurant.objects.all():
+        distance = haversine(user_lat, user_lon, restaurant.latitude, restaurant.longitude)
+        if distance <= radius_km:
+            nearby_restaurant_ids.append(restaurant.id)
+
+    # Step 3: Filter dishes
+    dishes = Dish.objects.filter(
+        category__title__in=selected_categories,
+        restaurant__id__in=nearby_restaurant_ids
+    )
+
+    serializer = DishSerializer(dishes, many=True)
+
+    return Response({
+        "recommended_categories": selected_categories,
+        "dishes": serializer.data
+    })

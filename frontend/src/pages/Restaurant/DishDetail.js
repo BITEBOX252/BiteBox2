@@ -268,17 +268,30 @@ const handleReviewSubmit=(e)=>{
                         <h1 className="fw-bold mb-3">{dishes.title}</h1>
                         <div className="d-flex text-primary just align-items-center">
                             <ul className="mb-3 d-flex p-0" style={{ listStyle: "none" }}>
-                                <li>
-                                    <i className="fas fa-star fa-sm text-warning ps-0" title="Bad" />
-                                    <i className="fas fa-star fa-sm text-warning ps-0" title="Bad" />
-                                    <i className="fas fa-star fa-sm text-warning ps-0" title="Bad" />
-                                    <i className="fas fa-star fa-sm text-warning ps-0" title="Bad" />
-                                    <i className="fas fa-star fa-sm text-warning ps-0" title="Bad" />
-                                </li>
+                            {[1, 2, 3, 4, 5].map((i) => {
+    const roundedRating = Math.round((dishes?.dish_rating || 0) * 2) / 2;
+
+    return (
+      <li key={i}>
+        <i
+          className={`fa-sm ps-0 text-warning ${
+            roundedRating >= i
+              ? 'fas fa-star'           // Full
+              : roundedRating >= i - 0.5
+              ? 'fas fa-star-half-alt' // Half
+              : 'far fa-star'          // Empty
+          }`}
+        />
+      </li>
+    );
+  })}
 
                                 <li style={{ marginLeft: 10, fontSize: 13 }}>
                                     <a href="" className="text-decoration-none">
-                                        <strong className="me-2">4/5</strong>(2 reviews)
+                                    <strong className="me-2">
+  {Number(dishes?.dish_rating).toFixed(1)}/5 ({dishes?.reviews?.length} Reviews)
+</strong>
+
                                     </a>
                                 </li>
                             </ul>

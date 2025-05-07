@@ -1,6 +1,9 @@
 from django.contrib import admin
 from .models import Dish,Category,Gallery,PortionSize,SpiceLevel,Specification,Cart,CartOrder,Tax,CartOrderItem,Notification,Review,DishFAQ,Coupon,Wishlist
+from django.db.models.functions import Lower
 
+class CategoryAdmin(admin.ModelAdmin):
+    ordering = [Lower('title')]  # Case-insensitive A-Z
 class GalleryAdmin(admin.TabularInline):
     model=Gallery
     
@@ -25,7 +28,7 @@ class DishAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Dish,DishAdmin)
-admin.site.register(Category)
+admin.site.register(Category,CategoryAdmin)
 admin.site.register(Cart)
 admin.site.register(CartOrder)
 admin.site.register(CartOrderItem)

@@ -268,7 +268,7 @@ class Review(models.Model):
         (5,"5 star"),
     )
     user=models.ForeignKey(User,on_delete=models.SET_NULL,null=True,blank=True)
-    dish=models.ForeignKey(Dish,on_delete=models.SET_NULL,null=True,blank=True)
+    dish=models.ForeignKey(Dish,on_delete=models.SET_NULL,null=True,blank=True,related_name='reviews')
     review=models.TextField()
     reply=models.TextField(null=True,blank=True)
     rating=models.IntegerField(default=None,choices=RATING_CHOICES)
