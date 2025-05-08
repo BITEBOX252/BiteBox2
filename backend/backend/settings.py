@@ -97,13 +97,23 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'Bitebox',  # The name of your PostgreSQL database
-        'USER': 'Bitebox',      # The PostgreSQL username
-        'PASSWORD': 'Bitebox',  # The PostgreSQL password
-        'HOST': 'localhost',   # The host (leave as 'localhost' for local databases)
+        'NAME': 'bitebox-final',  # The name of your PostgreSQL database
+        'USER': 'bitebox_final',      # The PostgreSQL username
+        'PASSWORD': 'bitebox-final',  # The PostgreSQL password
+        'HOST': 'bitebox-final.c9mk4iamcldn.eu-north-1.rds.amazonaws.com',   # The host (leave as 'localhost' for local databases)
         'PORT': '5432',        # The PostgreSQL port (5432 is the default)
     }
 }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'Bitebox',  # The name of your PostgreSQL database
+#         'USER': 'Bitebox',      # The PostgreSQL username
+#         'PASSWORD': 'Bitebox',  # The PostgreSQL password
+#         'HOST': 'localhost',   # The host (leave as 'localhost' for local databases)
+#         'PORT': '5432',        # The PostgreSQL port (5432 is the default)
+#     }
+# }
 
 # JWT Configuration
 REST_FRAMEWORK = {
