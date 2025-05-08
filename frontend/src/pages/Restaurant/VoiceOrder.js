@@ -975,15 +975,16 @@ const VoiceOrder = () => {
   return (
     <div style={{ maxWidth: '600px', margin: 'auto', padding: '20px' }}>
       <h2>🎤 Voice Order</h2>
-
-      <div>
+      <h5>Place Your Order with Your Voice
+      Skip the typing — just speak! Use our voice ordering feature to quickly and easily place your food order hands-free. It’s fast, simple, and perfect for when you're on the go.</h5>
+      <div className='mt-3'>
         <button onClick={handleStart}>Start Listening</button>
         <button onClick={handleStop}>Stop</button>
         <button onClick={handleSend}>Send Order</button>
         <button onClick={resetTranscript}>Clear</button>
       </div>
 
-      <p><strong>Status:</strong> {listening ? '🎙️ Listening...' : '🛑 Stopped'}</p>
+      <p className='mt-1'><strong>Status:</strong> {listening ? '🎙️ Listening...' : '🛑 Stopped'}</p>
       <p><strong>Transcript:</strong> {transcript}</p>
 
       {orderItems.length > 0 && (

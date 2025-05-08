@@ -125,8 +125,8 @@ const Navbar = () => {
               </li>
               { data?.id ? (
                 <>
-                <Link className="nav-link" to={'/voice-order'}>Voice Order</Link>
-                <Link className="nav-link" to={'/weather-based-dishes'}>Weather Food Suggestions</Link>
+                <Link className="btn btn-primary" to={'/voice-order'}>Voice Order</Link>
+                <Link className="nav-link bg-primary ms-2 text-white rounded" to={'/weather-based-dishes'}>Weather Food Suggestions</Link>
                 
 
               <li className="nav-item dropdown">
